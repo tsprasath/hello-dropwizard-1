@@ -44,3 +44,93 @@ Your next task is to take the recently built hello-dropwizard service:
 ## Results
 
 Make the dev environment automation available via a public github repo with any instructions on how to run your dev environment in an accompanying `README.md` file. Send it in and be prepared to discuss it.
+
+# Dev Environment Exercise.
+* We have dockerized the application,  (Ref the file [Dockerfile](https://github.com/haroonzone/hello-dropwizard/blob/master/Dockerfile)). 
+* Docker Compose is used to manage multiple docker containers and their inter connectivity. In our case we have 2 containers -  Nginx and Dropwizard.  ( Ref File - [docker-compose.yml](https://github.com/haroonzone/hello-dropwizard/blobblob/master/docker-compose.yml) )
+ 
+* We are using Nginx to do the redirect ( /hello -> /hello-dropwizard/hello-world ) and a proxy layer before the application and admin endpoint. Nginx Configuration file - [nginx/default.conf](https://github.com/haroonzone/hello-dropwizard/blobblob/master/nginx/default.conf)
+
+Here are the Steps
+
+1. Build the DockerImage with your changes and tag as latest.
+     - Docker compose is picking the latest image tag, hence below are tagging the image as latest. 
+   
+         ``` docker build -t hello-dropwizard:latest . ```
+
+
+2. Start all Docker Containers  - Nginx and Dropwizard via Docker Compose.
+   - Nginx will listen on port 80 and will proxy all request to the port 8080 of Dropwizard container.
+   - Nginx will also do the redirct of /hello to /hello-dropwizard/hello-world  as requested in the tasks list.
+   - Nginx also  listen on port 81 and will proxy all request to the port 8081 of Dropwizard container.
+
+       ```docker-compose up -d```
+
+
+3. Check the Below Mentioned Tested Workflows. 
+
+
+4. Stop all Docker Containers.
+   
+   ```docker-compose down```
+
+# Vagrant Provisioner: Docker Compose
+
+A Vagrant provisioner for [Docker Compose](https://docs.docker.com/compose/). Installs Docker Compose and can also bring up the containers defined by a [docker-compose.yml](https://docs.docker.com/compose/yml/).
+
+## Install
+
+```bash
+vagrant plugin install vagrant-docker-compose
+```
+
+## Usage
+### To install docker and docker-compose
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+
+  config.vm.provision :docker
+  config.vm.provision :docker_compose
+end
+```
+
+### To install and run docker-compose on `vagrant up`
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+
+  config.vm.provision :docker
+  config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yml", run: "always"
+end
+```
+
+### To install and run docker-compose, with multiple files, on `vagrant up`
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+
+  config.vm.provision :docker
+  config.vm.provision :docker_compose,
+    yml: [
+      "/vagrant/docker-compose-base.yml",
+      "/vagrant/docker-compose.yml",
+      ...
+    ],
+    run: "always"
+end
+```
+
+### To install, rebuild and run docker-compose on `vagrant up`
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+
+  config.vm.provision :docker
+  config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yml", rebuild: true, run: "always"
+end
+```
