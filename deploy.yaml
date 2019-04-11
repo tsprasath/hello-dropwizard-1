@@ -1,0 +1,95 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+ name: dropwizard
+---
+#---Deployment--#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-dropwizard
+  namespace: dropwizard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-dropwizard
+  template:
+    metadata:
+      labels:
+        app: hello-dropwizard
+        version: v0.1
+    spec:
+      containers:
+      - name: hello-dropwizard
+        image: tsprasath91/hello-dropwizard:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
+      restartPolicy: Always
+      hostNetwork: false
+      dnsPolicy: "Default"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-dropwizard
+  namespace: dropwizard
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+  selector:
+    app: hello-dropwizard
+---
+#---Autoscaler---#
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+    name: hello-dropwizard
+    namespace: dropwizard
+spec:
+    scaleTargetRef:
+        apiVersion: extensions/v1beta1
+        kind: Deployment
+        name: hello-dropwizard
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 50   
+---
+#---Ingress---#
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-dropwizard
+  namespace: dropwizard
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /hello-world
+          backend:
+            serviceName: hello-world
+            servicePort: 8080
+        - path: /
+          backend:
+            serviceName: healthcheck
+            servicePort: 8081
