@@ -46,10 +46,10 @@ Your next task is to take the recently built hello-dropwizard service:
 Make the dev environment automation available via a public github repo with any instructions on how to run your dev environment in an accompanying `README.md` file. Send it in and be prepared to discuss it.
 
 # Dev Environment Exercise.
-* We have dockerized the application,  (Ref the file [Dockerfile](https://github.com/haroonzone/hello-dropwizard/blob/master/Dockerfile)). 
-* Docker Compose is used to manage multiple docker containers and their inter connectivity. In our case we have 2 containers -  Nginx and Dropwizard.  ( Ref File - [docker-compose.yml](https://github.com/haroonzone/hello-dropwizard/blobblob/master/docker-compose.yml) )
+* We have dockerized the application,  (Ref the file [Dockerfile](https://github.com/tsprasath/hello-dropwizard-1/blob/master/Dockerfile)). 
+* Docker Compose is used to manage multiple docker containers and their inter connectivity. In our case we have 2 containers -  Nginx and Dropwizard.  ( Ref File - [docker-compose.yml](https://github.com/tsprasath/hello-dropwizard-1/blob/master/docker-compose.yml) )
  
-* We are using Nginx to do the redirect ( /hello -> /hello-dropwizard/hello-world ) and a proxy layer before the application and admin endpoint. Nginx Configuration file - [nginx/default.conf](https://github.com/haroonzone/hello-dropwizard/blobblob/master/nginx/default.conf)
+* We are using Nginx to do the redirect ( /hello -> /hello-dropwizard/hello-world ) and a proxy layer before the application and admin endpoint. Nginx Configuration file - [nginx/default.conf](https://github.com/tsprasath/hello-dropwizard-1/blob/master/nginx/default.conf)
 
 Here are the Steps
 
