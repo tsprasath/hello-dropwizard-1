@@ -26,6 +26,6 @@ services:
     environment:
           localhost: http://172.17.0.6:8080          
     restart: always
-    expose:
+    ports:
       - "8080:8080"
       - "8081:8081"     
