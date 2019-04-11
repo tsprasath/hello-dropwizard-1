@@ -1,13 +1,14 @@
-# NOTE: 
-# you need to install a couple of vagrant plugins:
-#
-# vagrant plugin install vagrant-docker-compose
-# 
-# vagrant plugin install vagrant-gatling-rsync
-# 
-# vagrant plugin install vagrant-vbguest
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+unless Vagrant.has_plugin?("vagrant-docker-compose")
+  system("vagrant plugin install vagrant-docker-compose")
+  puts "Dependencies installed, please try the command again."
+  exit
+end
+
 Vagrant.configure(2) do |config|
-  config.vm.box = “ubuntu/trusty64”
+  config.vm.box = "ubuntu/bionic64"
   # Configure VM options: here 1 GB of ram to prevent npm install Killed error
   config.vm.provider “virtualbox” do |v|
     v.memory = 1024
