@@ -13,10 +13,6 @@ Vagrant.configure(2) do |config|
     v.memory = 1024
     v.cpus = 1
   end
-  config.vm.network “forwarded_port”, guest: 3000, host: 3000
-  # If errors occur, try running “vagrant provision” manually
-  # after “vagrant up”
   config.vm.provision :docker
-  # compose_version needs to be 1.6.0 if you want to use docker-compose file version 2
-  config.vm.provision :docker_compose, compose_version:”1.6.0", rebuild: “true”, run: “always”, yml: “/vagrant/docker-compose.yml”
- end
+  config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yml", run: "always"
+end
