@@ -18,8 +18,7 @@ end
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/bionic64"
   config.vm.provision :docker
-  config.vm.provision :docker_compose
-  config.vm.provision :shell, inline: "cd /vagrant && docker-compose pull"
+  config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yml", rebuild: true, run: "always"
   #config.vm.provision :docker_compose
   #config.vm.provision :shell, inline: "cd /vagrant && docker-compose stop && docker-compose rm -f && docker-compose up"
 end
