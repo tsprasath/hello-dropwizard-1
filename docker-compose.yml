@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3"
 
 services:
   nginx:
@@ -9,4 +9,4 @@ services:
       - "80:80"
       - "81:81" 
   dropwizard:
-    image: hello-dropwizard:latest
+    image: tsprasath91/hello-dropwizard:latest
