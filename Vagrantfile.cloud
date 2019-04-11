@@ -1,0 +1,35 @@
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+unless Vagrant.has_plugin?("vagrant-docker-compose")
+  system("vagrant plugin install vagrant-docker-compose")
+  puts "Dependencies installed, please try the command again."
+  exit
+end
+
+unless Vagrant.has_plugin?("vagrant-google")
+  system("vagrant plugin install vagrant-google")
+  puts "Dependencies installed, please try the command again."
+  exit
+end
+
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "google/gce"
+
+  config.vm.provider :google do |google, override|
+    google.google_project_id = "vagrant-237315"
+    google.google_client_email = "tsprasath91@gmail.com"
+    google.google_json_key_location = "vagrant.json"
+
+    google.image_family = 'ubuntu-1804-lts'
+
+    override.ssh.username = "ubuntu"
+    override.ssh.private_key_path = "~/.ssh/id_rsa"
+    #override.ssh.private_key_path = "~/.ssh/google_compute_engine"
+  end
+  config.vm.provision :docker
+  config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yml", run: "always"
+  #config.vm.provision :shell, inline: "cd /vagrant && docker-compose pull"
+end
